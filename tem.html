@@ -170,7 +170,6 @@
     const TIME_LIMIT = 60;  // Time limit for each question (in seconds)
     const Question_LIMIT = 5;   // Question limit
 
-
     let questions = [];
     let userName = "";
     let lineUID = '';
@@ -345,19 +344,23 @@
     });
 
     // Show the result box when the quiz is done
-    function showResult(){
-        document.querySelector('.quiz_box').style.display = "none";
-        document.querySelector('.result_box').style.display = "block";
+function showResult(){
+    document.querySelector('.quiz_box').style.display = "none";
+    document.querySelector('.result_box').style.display = "block";
 
-        const scoreText = document.querySelector(".score_text");
-        scoreText.innerHTML = userScore > 3
-            ? `<h4>ยอดเยี่ยม! 🎉 </h4> <p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
-            : userScore > 1
-            ? `<h4>เก่งมาก 😎 </h4><p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
-            : `<h4>เสียใจด้วย 😐 </h4><p> ${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`;
+    const scoreText = document.querySelector(".score_text");
+    scoreText.innerHTML = userScore > 3
+        ? `<h4>ยอดเยี่ยม! 🎉 </h4> <p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
+        : userScore > 1
+        ? `<h4>เก่งมาก 😎 </h4><p>${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`
+        : `<h4>เสียใจด้วย 😐 </h4><p> ${userName} คุณทำได้ ${userScore}/${questions.length} คะแนน</p>`;
 
-        saveQuizResults(userName, userScore, questions.length);
-    }
+    saveQuizResults(userName, userScore, questions.length);
+
+    document.querySelector('.share_score').addEventListener('click', function() {
+        shareScore(userName, userScore, questions.length);
+    });
+}
 
     // Function to save quiz results
     function saveQuizResults(userName, userScore, totalQuestions) {
@@ -385,19 +388,20 @@
         localStorage.setItem('lastSubmission', today);
           
           
-            Swal.fire({
-                icon: 'success',
-                title: 'Data Saved',
-                text: 'Data has been saved successfully to Google Sheets.'
-            });
-        }).catch(error => {
-            $.LoadingOverlay("hide");
-            Swal.fire({
-                icon: 'error',
-                title: 'Save Failed',
-                text: 'There was an error saving the data.'
-            });
+        Swal.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+            text: 'ข้อมูลถูกบันทึกลงใน Google Sheets เรียบร้อยแล้ว.'
         });
+    }).catch(error => {
+        console.error('Error:', error);
+        $.LoadingOverlay("hide");
+        Swal.fire({
+            icon: 'error',
+            title: 'บันทึกข้อมูลไม่สำเร็จ',
+            text: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล.'
+        });
+    });
     }
 
     // Timer for the quiz
@@ -585,7 +589,6 @@
   
 </script>
 
-
 <footer class="text-center text-lg-start bg-light text-muted" style="  position: static;left: 0;bottom: 0;width: 100%;">
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
         © 2024 Copyright  | พัฒนาโดยครูสิทธิชาติ สิทธิ<br/>
@@ -594,3 +597,4 @@
 
 </body>
 </html>
+
